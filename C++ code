@@ -1,0 +1,366 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <map>
+
+class FoodItem {
+public:
+    std::string name;
+    int calories;
+    int nutritionalValue;
+
+    FoodItem(std::string name, int calories, int nutritionalValue)
+        : name(std::move(name)), calories(calories), nutritionalValue(nutritionalValue) {}
+};
+
+class DietOptimizer {
+private:
+    std::vector<FoodItem> foodItems;
+    int calorieLimit;
+    std::map<std::string, std::vector<FoodItem>> categorizedFoodItems;
+
+    // Initialize predefined food items
+    void initializeFoodItems() {
+        // Additional items for Indian Breakfast
+        categorizedFoodItems["Indian Breakfast"] = {
+            {"Masala Dosa", 250, 60},
+            {"Idli-Sambar", 200, 40},
+            {"Poha", 180, 30},
+            {"Upma", 220, 35},
+            {"Aloo Paratha", 300, 45},
+            {"Poori Bhaji", 350, 50},
+            {"Rava Uttapam", 180, 40},
+            {"Medu Vada", 200, 35},
+            {"Semiya Upma", 160, 25},
+            {"Besan Chilla", 150, 30},
+            {"Chole Bhature", 400, 55},
+            {"Kanda Poha", 200, 35},
+            {"Methi Thepla", 220, 40},
+            {"Akki Roti", 250, 50},
+            {"Tomato Uttapam", 160, 30},
+            {"Paneer Paratha", 280, 60},
+            {"Ragi Idli", 180, 35},
+            {"Palak Puri", 200, 40},
+            {"Rava Kesari", 120, 25},
+            {"Bread Poha", 180, 30},
+            {"Aloo Methi Paratha", 280, 50},
+            {"Cabbage Pesarattu", 200, 45},
+            {"Gobi Paratha", 260, 55},
+            {"Set Dosa", 220, 40},
+            {"Oats Upma", 180, 35},
+            {"Moong Dal Cheela", 150, 30},
+            {"Suzhiyan", 120, 25},
+            {"Ragi Roti", 200, 40},
+            {"Vegetable Pongal", 220, 35},
+            {"Banana Dosa", 160, 30},
+            {"Sevai", 180, 25},
+            {"Mango Sheera", 150, 30},
+            {"Cucumber Dosa", 200, 35},
+            {"Onion Uthappam", 220, 40},
+            {"Bread Uttapam", 180, 30},
+            {"Ragi Upma", 160, 25},
+            {"Mango Idli", 120, 30},
+            {"Avocado Paratha", 300, 50},
+            {"Rava Dosa", 180, 35},
+            {"Kara Pongal", 220, 40},
+            {"Cornmeal Upma", 200, 35},
+            {"Vegetable Rava Pancake", 160, 30},
+            {"Mango Poha", 180, 35},
+            {"Coconut Uttapam", 220, 40},
+            {"Jowar Roti", 180, 30},
+            {"Bhutte Ka Kees", 250, 45},
+            {"Bajra Khichdi", 200, 40},
+            {"Pancakes", 180, 35},
+            {"Soybean Paratha", 220, 45},
+            {"Palak Paratha", 280, 55},
+            {"Curd Rice", 150, 30},
+            {"Neer Dosa", 160, 35},
+            {"Besan Puda", 180, 30},
+            {"Oats Dosa", 200, 35},
+            {"Lemon Rice", 180, 30},
+            {"Ragi Banana Pancake", 220, 40},
+            {"Khar", 200, 35},
+            {"Pesarattu", 180, 30},
+            {"Custard Pancake", 160, 25},
+            {"Bhurji Pav", 250, 45},
+        };
+
+        // Additional items for Indian Lunch
+        categorizedFoodItems["Indian Lunch"] = {
+            {"Vegetable Biryani", 350, 65},
+            {"Rajma Chawal", 300, 50},
+            {"Butter Chicken", 400, 70},
+            {"Paneer Tikka Masala", 320, 60},
+            {"Chana Masala", 250, 45},
+            {"Aloo Gobi", 280, 50},
+            {"Chicken Curry", 350, 55},
+            {"Dal Tadka", 200, 40},
+            {"Palak Paneer", 300, 55},
+            {"Bhindi Masala", 220, 45},
+            {"Chicken Biryani", 380, 60},
+            {"Kadai Mushroom", 280, 50},
+            {"Fish Curry", 350, 65},
+            {"Dal Makhani", 300, 55},
+            {"Baingan Bharta", 250, 45},
+            {"Matar Paneer", 320, 55},
+            {"Aloo Methi", 240, 40},
+            {"Soya Keema", 280, 50},
+            {"Lauki Kofta", 300, 55},
+            {"Prawn Curry", 380, 65},
+            {"Aloo Palak", 220, 45},
+            {"Chole Bhature", 400, 60},
+            {"Mushroom Biryani", 350, 55},
+            {"Kofta Curry", 320, 60},
+            {"Egg Curry", 300, 55},
+            {"Gujarati Thali", 400, 70},
+            {"Sambhar Rice", 300, 50},
+            {"Shahi Paneer", 350, 60},
+            {"Stuffed Capsicum", 250, 45},
+            {"Kheer", 180, 35},
+            {"Jeera Rice", 200, 40},
+            {"Veg Handi", 320, 55},
+            {"Tandoori Roti", 150, 25},
+            {"Chicken Korma", 380, 65},
+            {"Spinach Rice", 280, 50},
+            {"Aloo Parwal", 220, 40},
+            {"Fish Tikka", 350, 60},
+            {"Rajasthani Dal", 220, 45},
+            {"Mango Rice", 200, 35},
+            {"Keema Matar", 300, 55},
+            {"Cabbage Sabzi", 240, 40},
+            {"Puliyodarai", 250, 45},
+            {"Chicken Pulao", 350, 60},
+            {"Bharwa Bhindi", 220, 40},
+            {"Capsicum Rice", 280, 50},
+            {"Pumpkin Curry", 240, 45},
+            {"Dhansak", 320, 55},
+            {"Chapati", 100, 20},
+            {"Chana Pulao", 200, 40},
+            {"Achari Chicken", 350, 60},
+            {"Potato Curry", 220, 45},
+            {"Kerala Sadya", 400, 70},
+            {"Mutton Curry", 380, 65},
+            {"Tawa Pulao", 300, 50},
+            {"Mixed Vegetable Sabzi", 250, 45},
+            {"Chicken Handi", 320, 55},
+        };
+
+        // Additional items for Indian Snacks
+        categorizedFoodItems["Indian Snack"] = {
+            {"Samosa", 150, 30},
+            {"Pakora", 120, 25},
+            {"Pav Bhaji", 250, 45},
+            {"Kachori", 180, 35},
+            {"Dhokla", 160, 30},
+            {"Paneer Tikka", 220, 50},
+            {"Aloo Chaat", 200, 40},
+            {"Bhel Puri", 180, 35},
+            {"Vada Pav", 150, 30},
+            {"Chole Bhature", 350, 55},
+            {"Pani Puri", 120, 25},
+            {"Dahi Puri", 150, 30},
+            {"Sev Puri", 160, 35},
+            {"Aloo Tikki", 180, 40},
+            {"Chana Chaat", 200, 45},
+            {"Papdi Chaat", 160, 30},
+            {"Dabeli", 220, 40},
+            {"Khaman Dhokla", 150, 35},
+            {"Corn Chaat", 180, 35},
+            {"Bread Pakora", 200, 40},
+            {"Veg Momos", 180, 35},
+            {"Kalmi Kebab", 220, 50},
+            {"Bread Rolls", 180, 35},
+            {"Aloo Bonda", 160, 30},
+            {"Bread Bhaji", 200, 40},
+            {"Ragda Pattice", 240, 45},
+            {"Poha Cutlet", 180, 35},
+            {"Corn Kebab", 220, 50},
+            {"Veg Spring Rolls", 200, 40},
+            {"Kanda Bhaji", 160, 30},
+            {"Rice Dhokla", 180, 35},
+            {"Pudina Kothmir Puri", 220, 50},
+            {"Stuffed Bread Pakora", 200, 40},
+            {"Sabudana Vada", 160, 30},
+            {"Moong Dal Chilla", 180, 35},
+            {"Vegetable Cutlet", 220, 50},
+            {"Chilli Paneer", 200, 40},
+            {"Masala Peanuts", 160, 30},
+            {"Cheese Balls", 180, 35},
+            {"Aloo Puff", 200, 40},
+            {"Spinach Cheese Balls", 220, 50},
+            {"Bread Upma", 160, 30},
+            {"Dahi Kebab", 180, 35},
+            {"Potato Smiley", 200, 40},
+            {"Onion Rings", 180, 35},
+            {"Mushroom Tikka", 220, 50},
+            {"Cheese Pakora", 200, 40},
+            {"Maggi Noodles", 180, 35},
+            {"Schezwan Noodles", 220, 50},
+            {"Veg Hakka Noodles", 200, 40},
+            {"Pav Sandwich", 240, 45},
+            {"Cheese Sandwich", 200, 40},
+            {"Katori Chaat", 160, 30},
+            {"Veg Puff", 180, 35},
+            {"Poha Chivda", 200, 40},
+            {"Bread Dhokla", 180, 35},
+            {"Fruit Chaat", 160, 30},
+            {"Dahi Bhalla", 220, 50},
+        };
+
+        // Additional items for Indian Dinner
+        categorizedFoodItems["Indian Dinner"] = {
+            {"Roti", 100, 20},
+            {"Chicken Curry", 350, 55},
+            {"Vegetable Biryani", 350, 65},
+            {"Palak Paneer", 300, 55},
+            {"Dal Tadka", 200, 40},
+            {"Aloo Gobi", 280, 50},
+            {"Paneer Butter Masala", 320, 60},
+            {"Tandoori Chicken", 400, 70},
+            {"Chana Masala", 250, 45},
+            {"Butter Chicken", 380, 65},
+            {"Rajma Chawal", 300, 50},
+            {"Fish Curry", 350, 60},
+            {"Bhindi Masala", 220, 45},
+            {"Chicken Biryani", 380, 60},
+            {"Aloo Methi", 240, 40},
+            {"Matar Paneer", 320, 55},
+            {"Prawn Curry", 380, 65},
+            {"Dal Makhani", 300, 55},
+            {"Baingan Bharta", 250, 45},
+            {"Gobi Manchurian", 280, 50},
+            {"Lauki Kofta", 300, 55},
+            {"Aloo Palak", 220, 45},
+            {"Chole Bhature", 400, 60},
+            {"Mushroom Biryani", 350, 55},
+            {"Kofta Curry", 320, 60},
+            {"Egg Curry", 300, 55},
+            {"Gujarati Thali", 400, 70},
+            {"Sambhar Rice", 300, 50},
+            {"Shahi Paneer", 350, 60},
+            {"Stuffed Capsicum", 250, 45},
+            {"Chicken Korma", 380, 65},
+            {"Spinach Rice", 280, 50},
+            {"Aloo Parwal", 220, 40},
+            {"Fish Tikka", 350, 60},
+            {"Rajasthani Dal", 220, 45},
+            {"Mango Rice", 200, 35},
+            {"Keema Matar", 300, 55},
+            {"Cabbage Sabzi", 240, 40},
+            {"Puliyodarai", 250, 45},
+            {"Bread Rolls", 180, 35},
+            {"Chicken Pulao", 350, 60},
+            {"Bharwa Bhindi", 220, 40},
+            {"Capsicum Rice", 280, 50},
+            {"Pumpkin Curry", 240, 45},
+            {"Dhansak", 320, 55},
+            {"Chapati", 100, 20},
+            {"Chana Pulao", 200, 40},
+            {"Achari Chicken", 350, 60},
+            {"Potato Curry", 220, 45},
+            {"Kerala Sadya", 400, 70},
+            {"Mutton Curry", 380, 65},
+            {"Tawa Pulao", 300, 50},
+            {"Mixed Vegetable Sabzi", 250, 45},
+            {"Chicken Handi", 320, 55},
+        };
+    }
+
+      // Knapsack algorithm to optimize diet
+    std::vector<FoodItem> optimizeDiet() {
+        int n = foodItems.size();
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(calorieLimit + 1, 0));
+        std::vector<std::vector<bool>> selected(n + 1, std::vector<bool>(calorieLimit + 1, false));
+
+        for (int i = 1; i <= n; ++i) {
+            for (int w = 0; w <= calorieLimit; ++w) {
+                if (foodItems[i - 1].calories <= w) {
+                    int newValue = foodItems[i - 1].nutritionalValue + dp[i - 1][w - foodItems[i - 1].calories];
+                    if (newValue > dp[i][w]) {
+                        dp[i][w] = newValue;
+                        selected[i][w] = true;
+                    } else {
+                        dp[i][w] = dp[i - 1][w];
+                    }
+                } else {
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+
+        // Reconstruct the optimal set of food items
+        std::vector<FoodItem> optimalDiet;
+        for (int i = n, w = calorieLimit; i > 0; i--) {
+            if (selected[i][w]) {
+                optimalDiet.push_back(foodItems[i - 1]);
+                w -= foodItems[i - 1].calories;
+            }
+        }
+
+        return optimalDiet;
+    }
+
+public:
+    DietOptimizer(int calorieLimit) : calorieLimit(calorieLimit) {
+        initializeFoodItems();
+    }
+
+    void addFoodItem(const FoodItem& item) {
+        foodItems.push_back(item);
+    }
+
+    void findOptimalDiet() {
+        auto optimalDiet = optimizeDiet();
+        std::cout << "Optimal diet plan within the calories limit at one time:\n";
+        std::cout << std::left << std::setw(20) << "Food Item" << std::setw(15) << "Calories (G)" << std::setw(25) << "Nutritional Value (cal)" << "\n";
+        std::cout << "--------------------------------------------------------------------------------\n"; // Print a divider line
+        for (auto& item : optimalDiet) {
+            std::cout << std::left << std::setw(20) << item.name << std::setw(15) << item.calories << std::setw(25) << item.nutritionalValue << "\n";
+        }
+    }
+
+    void selectFoodItemsBasedOnCategory(const std::string& category) {
+        std::vector<FoodItem>& items = categorizedFoodItems[category];
+        std::cout << "Select food items from the list below by typing the corresponding numbers. Type 'done' when finished:\n";
+        for (size_t i = 0; i < items.size(); ++i) {
+            std::cout << i+1 << ". " << items[i].name << " (Calories: " << items[i].calories << ", Nutritional Value: " << items[i].nutritionalValue << ")\n";
+        }
+        std::string input;
+        while (std::cin >> input && input != "done") {
+            int choice;
+            try {
+                choice = std::stoi(input);
+                if (choice > 0 && choice <= static_cast<int>(items.size())) {
+                    addFoodItem(items[choice - 1]);
+                    std::cout << items[choice - 1].name << " added to your diet plan.\n";
+                } else {
+                    std::cout << "Invalid choice. Please choose a number between 1 and " << items.size() << ".\n";
+                }
+            } catch (std::invalid_argument&) {
+                std::cout << "Invalid input. Please type a number or 'done' to finish: ";
+                continue;
+            }
+            std::cout << "Add more or type 'done' to finish: ";
+        }
+    }
+};
+
+int main() {
+    int calorieLimit;
+    std::cout << "Enter your calories limit at one time(G): ";
+    std::cin >> calorieLimit;
+
+    DietOptimizer optimizer(calorieLimit);
+
+    std::cout << "Select a category: 'Indian Breakfast', 'Indian Lunch', 'Indian Snack', 'Indian Dinner': ";
+    std::string foodCategory;
+    std::cin.ignore(); // clear input buffer
+    std::getline(std::cin, foodCategory);
+
+    optimizer.selectFoodItemsBasedOnCategory(foodCategory);
+
+    optimizer.findOptimalDiet();
+
+    return 0;
+}
